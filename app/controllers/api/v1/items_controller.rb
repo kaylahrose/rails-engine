@@ -1,4 +1,10 @@
 class Api::V1::ItemsController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound, with: :error_response
+
+  def error_response(error)
+    render json: ErrorSerializer.error_json(error), status: 404
+  end
+
   def index
     render json: ItemSerializer.new(Item.all)
   end
